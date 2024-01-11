@@ -1,0 +1,28 @@
+version: "3"
+services:
+    app:
+        build:
+            context: .
+            dockerfile: ./docker/app/Dockerfile
+        container_name: go_docker_ec2-app
+        volumes:
+            - .:/go/src/go_docker_ec2
+        ports:
+            - "80:8080"
+        depends_on:
+            - mysql
+        restart: always
+    mysql:
+        image: mysql:8.0
+        # restart: always
+        container_name: go_docker_ec2-db
+        environment:
+            # MYSQL_USER: root
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: test_db
+        hostname: mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./docker/db/conf.d:/etc/mysql/conf.d
+            - ./log/mysql:/var/log/mysql
